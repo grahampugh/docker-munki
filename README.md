@@ -1,15 +1,20 @@
 docker-munki
 -----
-A container that serves static files at http://munki/repo using nginx.
+
+A container that serves static files at http://munki/repo using nginx, with Basic HTTP Authentication. There is no SSL support at this time, so bear in mind that the credentials will be sent in plain text.
+
+This container forked from **groob/docker-munki**.
 
 nginx expects the munki repo content to be located at /munki_repo. Use a data container and the --volumes-from option to add files.
+
+`.htaccess` and `.htpasswd` should be placed in the root of the repo.
 
 Creating a Data Container:
 ---
 Create a data-only container to host the Munki repo:  
 	`docker run -d --name munki-data --entrypoint /bin/echo nmcspadden/munki Data-only container for munki`
 
-For more info on data containers read [Tom Offermann](http://www.offermann.us/2013/12/tiny-docker-pieces-loosely-joined.html)'s blog post and the [official documentation](https://docs.docker.com/userguide/dockervolumes/). 
+For more info on data containers read [Tom Offermann](http://www.offermann.us/2013/12/tiny-docker-pieces-loosely-joined.html)'s blog post and the [official documentation](https://docs.docker.com/userguide/dockervolumes/).
 
 Run the Munki container:
 -----
@@ -19,7 +24,7 @@ If you have an existing Munki repo on the host, you can mount that folder direct
 
 Otherwise, use --volumes-from the data container:  
 	`docker run -d --name munki --volumes-from munki-data -p 80:80 -h munki nmcspadden/munki`
-	
+
 
 Populate the Munki server (optional):
 -----
